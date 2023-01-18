@@ -47,20 +47,6 @@ data_root=${data_root:-'path/to/cifar'}
 sup_weight=${sup_weight:-0.2}
 pretrain_name=res18_cifar100
 
-if [[ ${prune} == "True" ]]
-then
-  pretrain_name="${pretrain_name}_pruneP${prune_percent}"
-  if [[ ${prune_dual_bn} == "True" ]]
-  then
-    pretrain_name="${pretrain_name}DualBN"
-  fi
-
-  if [[ ${random_prune_percent} != "0" ]]
-  then
-    pretrain_name="${pretrain_name}RandomP${random_prune_percent}"
-  fi
-fi
-
 cmd="python -m torch.distributed.launch --nproc_per_node=${GPU_NUM} --master_port ${port} train_simCLR.py ${pretrain_name} --epochs ${pretrain_epochs} \
 --batch_size ${batch_size} --optimizer sgd --lr ${pretrain_lr} --temperature ${pretrain_temp} --model res18 \
 --trainSplit cifar100_imbSub_with_subsets/${pretrain_split}.npy --save-dir ${save_dir} --seed ${seed} \
@@ -82,11 +68,6 @@ cmd_full="python train_cifar.py finetune \
 --trainSplit cifar100/cifar100_trainIdxList.npy --fixto layer4  --checkpoint ${save_dir}/${pretrain_name}/model_${pretrain_epochs}.pt \
 --cvt_state_dict --save-dir ${save_dir}_tune --valiSplit cifar100/cifar100_valIdxList.npy --dataset cifar100 --data ${data_root}"
 
-if [[ ${prune_dual_bn} == "True" ]]
-then
-  cmd_full="${cmd_full} --bnNameCnt 0"
-fi
-
 if [[ ${test_only} == "True" ]]
 then
   cmd_full="${cmd_full} --test_only"
@@ -99,11 +80,6 @@ cmd_few_shot="python train_cifar.py few_shot \
 --fixbn --wd 0 --model res18 --epochs 100 --lr ${tuneLr} --decreasing_lr 40,60 \
 --trainSplit cifar100_imbSub_with_subsets/${train_split1}.npy --fixto layer4 --checkpoint ${save_dir}/${pretrain_name}/model_${pretrain_epochs}.pt \
 --cvt_state_dict --save-dir ${save_dir}_tune --valiSplit cifar100/cifar100_valIdxList.npy --dataset cifar100 --test_freq 5 --data ${data_root}"
-
-if [[ ${prune_dual_bn} == "True" ]]
-then
-  cmd_few_shot="${cmd_few_shot} --bnNameCnt 0"
-fi
 
 if [[ ${test_only} == "True" ]]
 then
