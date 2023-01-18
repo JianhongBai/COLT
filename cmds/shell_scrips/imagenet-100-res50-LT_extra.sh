@@ -13,9 +13,6 @@ case $key in
     --seed) seed=("$2"); shift; shift ;;
     --temp) temp=("$2"); shift; shift ;;
     --pretrain_lr) pretrain_lr=("$2"); shift; shift ;;
-    --prune) prune=("$2"); shift; shift ;;
-    --prune_percent) prune_percent=("$2"); shift; shift ;;
-    --prune_dual_bn) prune_dual_bn=("$2"); shift; shift ;;
     --pretrain_batch_size) pretrain_batch_size=("$2"); shift; shift ;;
     --only_pretraining) only_pretraining=("$2"); shift; shift ;;
     --only_finetuning) only_finetuning=("$2"); shift; shift ;;
@@ -26,14 +23,11 @@ case $key in
     --save_dir) save_dir=("$2"); shift; shift ;;
     --online_sampling) online_sampling=("$2"); shift; shift ;;
     --resume) resume=("$2"); shift; shift ;;
-    --bcl_sampling) bcl_sampling=("$2"); shift; shift ;;
     --sample_interval) sample_interval=("$2"); shift; shift ;;
     --warmup) warmup=("$2"); shift; shift ;;
-    --percentile) percentile=("$2"); shift; shift ;;
     --k_largest_logits) k_largest_logits=("$2"); shift; shift ;;
     --k_means_clusters) k_means_clusters=("$2"); shift; shift ;;
     --budget) budget=("$2"); shift; shift ;;
-    --debug) debug=("$2"); shift; shift ;;
     --author_dir) author_dir=("$2"); shift; shift ;;
     --sup_weight) sup_weight=("$2"); shift; shift ;;
     --cluster_temperature) cluster_temperature=("$2"); shift; shift ;;
@@ -51,11 +45,8 @@ pretrain_split=${pretrain_split:-imageNet_100_LT_train}
 workers=${workers:-10}
 pretrain_batch_size=${pretrain_batch_size:-256}
 linear_eval_seed=${linear_eval_seed:-1}
-prune=${prune:-False}
-prune_percent=${prune_percent:-0.3}
 temp=${temp:-0.2}
 pretrain_lr=${pretrain_lr:-0.5}
-prune_dual_bn=${prune_dual_bn:-False}
 only_pretraining=${only_pretraining:-False}
 only_finetuning=${only_finetuning:-False}
 test_only=${test_only:-False}
@@ -65,28 +56,16 @@ data=${data:-/ImageNet/}
 seed=${seed:-1}
 save_dir=${save_dir:-False}
 resume=${resume:-False}
-bcl_sampling=${bcl_sampling:-False}
 sample_interval=${sample_interval:--1}
 warmup=${warmup:--1}
 k_largest_logits=${k_largest_logits:-10}
 k_means_clusters=${k_means_clusters:-10}
 budget=${budget:-10000}
-debug=${debug:-False}
-sup_weight=${sup_weight:-0.2}
+sup_weight=${sup_weight:-0.01}
 cluster_temperature=${cluster_temperature:-1.0}
 sample_set=${sample_set:-0}
 COLT=${COLT:-False}
 pretrain_name=${pretrain_split}_res50
-
-if [[ ${prune} == "True" ]]
-then
-  pretrain_name="${pretrain_name}_pruneP${prune_percent}"
-
-  if [[ ${prune_dual_bn} == "True" ]]
-  then
-    pretrain_name="${pretrain_name}DualBN"
-  fi
-fi
 
 cmd="python -m torch.distributed.launch --nproc_per_node=${GPU_NUM} --master_port ${port} train_simCLR.py \
 ${pretrain_name} --epochs ${pretrain_epochs} \
@@ -101,29 +80,9 @@ then
   cmd="${cmd} --COLT"
 fi
 
-if [[ ${debug} == "True" ]]
-then
-  cmd="${cmd} --debug"
-fi
-
-if [[ ${bcl_sampling} == "True" ]]
-then
-  cmd="${cmd} --bcl_sampling"
-fi
-
 if [[ ${resume} == "True" ]]
 then
   cmd="${cmd} --resume"
-fi
-
-if [[ ${prune} == "True" ]]
-then
-  cmd="${cmd} --prune --prune_percent ${prune_percent}"
-
-  if [[ ${prune_dual_bn} == "True" ]]
-  then
-    cmd="${cmd} --prune_dual_bn"
-  fi
 fi
 
 tuneLr=30
@@ -134,11 +93,6 @@ train_imagenet.py ${pretrain_name}_tune \
 --checkpoint ${save_dir}/${pretrain_name}/model_${pretrain_epochs}.pt \
 --cvt_state_dict --world_size ${GPU_NUM} --port ${port} --num_workers ${workers} --test_freq 2 \
 --seed ${linear_eval_seed} --data ${data}"
-
-if [[ ${prune_dual_bn} == "True" ]]
-then
-  cmd_full="${cmd_full} --bnNameCnt 0"
-fi
 
 if [[ ${test_only} == "True" ]]
 then
@@ -152,11 +106,6 @@ cmd_few_shot="python -m torch.distributed.launch --nproc_per_node=${GPU_NUM} --m
   --model res50 --save-dir ${save_dir}_tune --dataset imagenet-100 --customSplit ${few_shot_split} \
   --checkpoint ${save_dir}/${pretrain_name}/model_${pretrain_epochs}.pt \
   --cvt_state_dict --world_size ${GPU_NUM} --port ${port} --num_workers ${workers} --test_freq 10 --data ${data}"
-
-if [[ ${prune_dual_bn} == "True" ]]
-then
-  cmd_few_shot="${cmd_few_shot} --bnNameCnt 0"
-fi
 
 if [[ ${test_only} == "True" ]]
 then
