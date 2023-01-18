@@ -67,15 +67,6 @@ sample_set=${sample_set:-False}
 imbalance_ratio=${imbalance_ratio:-0.01}
 pretrain_name=res18_cifar10
 
-if [[ ${prune} == "True" ]]
-then
-  pretrain_name="${pretrain_name}_pruneP${prune_percent}"
-  if [[ ${prune_dual_bn} == "True" ]]
-  then
-    pretrain_name="${pretrain_name}DualBN"
-  fi
-fi
-
 cmd="python -m torch.distributed.launch --nproc_per_node=${GPU_NUM} --master_port ${port} train_simCLR.py ${pretrain_name} --epochs ${pretrain_epochs} \
 --batch_size ${batch_size} --optimizer sgd --lr ${pretrain_lr} --temperature ${pretrain_temp} --model res18 \
 --trainSplit cifar10_imbSub_with_subsets/${pretrain_split}.npy --save-dir ${save_dir} --seed ${seed} \
@@ -98,11 +89,6 @@ cmd_full="python train_cifar.py finetune \
 --fixbn --wd 0 --model res18 --epochs 30 --lr ${tuneLr} --decreasing_lr 10,20 \
 --trainSplit cifar10/trainIdxList.npy --fixto layer4  --checkpoint ${save_dir}/${pretrain_name}/model_${pretrain_epochs}.pt \
 --cvt_state_dict --save-dir ${save_dir}_tune --dataset cifar10"
-
-if [[ ${prune_dual_bn} == "True" ]]
-then
-  cmd_full="${cmd_full} --bnNameCnt 0"
-fi
 
 if [[ ${test_only} == "True" ]]
 then
