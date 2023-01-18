@@ -7,7 +7,7 @@ learning and principally design a novel SSL method. Concretely, we first localiz
 
 ## Method
 <div align=center>
-<img src="imgs/pipeline.png" width="800" >
+<img src="pipeline.png" width="800" >
 </div>
 
 Overview of Contrastive with Out-of-distribution data for Long-Tail learning (COLT). COLT can be easily plugged into most SSL frameworks. Proposed components are denoted as red.
