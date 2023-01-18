@@ -21,7 +21,7 @@ scikit-learn
 matplotlib
 ```
 ## Train and evaluate pretrained models
-### CIFAR10
+### CIFAR-10
 SimCLR on long-tail training datasets
 ```
 # pre-train and finetune
@@ -40,7 +40,7 @@ do
 done
 ```
 
-### CIFAR100
+### CIFAR-100
 SimCLR on long-tail training datasets
 ```
 # pre-train and finetune
@@ -72,7 +72,7 @@ SimCLR+COLT on long tail training datasets
 ./cmds/shell_scrips/imagenet-100-res50-LT_extra.sh --data \path\to\imagenet -g 2 -p 4867 -w 10 --split imageNet_100_LT_train --save_dir COLT --COLT True
 ```
 
-### Places
+### Places-365
 SimCLR on long-tail training datasets
 ```
 # pre-train and finetune
