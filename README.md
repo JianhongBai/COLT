@@ -29,13 +29,13 @@ You can download 300K Random Images datasets in the following url:
 [300K Random Images](https://people.eecs.berkeley.edu/~hendrycks/300K_random_images.npy)
 
 ## Pretrained models downloading
-[CIFAR-10]()
+[CIFAR-10](https://drive.google.com/file/d/1zLAoKBMw8BnTuxBd2xB1dok8XozkBtq-/view?usp=sharing)
 
-[CIFAR-100]()
+[CIFAR-100](https://drive.google.com/file/d/18f9kBxjQurZJSJ9fnBgT7UODbHxE5K50/view?usp=sharing)
 
-[ImageNet-100]()
+[ImageNet-100](https://drive.google.com/file/d/1zgJgUdvIF905tZEHtJHeycDqDAruI8n1/view?usp=sharing)
 
-[Places-365]()
+[Places-365](https://drive.google.com/file/d/1zE-DEHoHZdfhueubiv4jjMczyyjBXNf1/view?usp=sharing)
 
 ## Train and evaluate pretrained models
 ### CIFAR-10
