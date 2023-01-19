@@ -1,5 +1,7 @@
 # On the Effectiveness of Out-of-Distribution Data in Self-Supervised Long-Tail Learning.
 
+ICLR 2023: This repository is the official implementation of [COLT]().
+
 ## Introduction
 Though Self-supervised learning (SSL) has been widely studied as a promising technique for representation learning, it doesn’t generalize well on long-tailed datasets due to the majority classes dominating the feature space. Recent work shows that the long-tailed learning performance could be boosted by sampling extra in-domain (ID) data for self-supervised training, however, large-scale ID data which can rebalance the minority classes are expensive to collect. 
 To this end, we propose an alternative but easy-to-use and effective solution, Contrastive with Out-of-distribution (OOD) data for Long-Tail learning (COLT), which can effectively exploit OOD data to dynamically re-balance the feature space. We empirically identify the counter-intuitive usefulness of OOD samples in SSL long-tailed
@@ -20,6 +22,12 @@ opencv-python
 scikit-learn 
 matplotlib
 ```
+
+## Datasets
+You can download 300K Random Images datasets in the following url:
+
+[300K Random Images](https://people.eecs.berkeley.edu/~hendrycks/300K_random_images.npy)
+
 ## Train and evaluate pretrained models
 ### CIFAR-10
 SimCLR on long-tail training datasets
@@ -84,3 +92,5 @@ SimCLR+COLT on long tail training datasets
 # pre-train and finetune
 ./cmds/shell_scrips/places365-LT_extra.sh --data \path\to\places -g 2 -p 4867 -w 10 --split Places_LT_train --save_dir COLT --COLT True
 ```
+
+
