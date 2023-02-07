@@ -102,4 +102,14 @@ SimCLR+COLT on long tail training datasets
 ./cmds/shell_scrips/places365-LT_extra.sh --data \path\to\places -g 2 -p 4867 -w 10 --split Places_LT_train --save_dir COLT --COLT True
 ```
 
-
+## Citation
+```
+@inproceedings{
+bai2023on,
+title={On the effectiveness of out-of-distribution data in self-supervised long-tail learning.},
+author={Jianhong Bai and Zuozhu Liu and Hualiang Wang and Jin Hao and YANG FENG and Huanpeng Chu and Haoji Hu},
+booktitle={International Conference on Learning Representations},
+year={2023},
+url={https://openreview.net/forum?id=v8JIQdiN9Sh}
+}
+```
