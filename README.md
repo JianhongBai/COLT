@@ -1,6 +1,6 @@
 # On the Effectiveness of Out-of-Distribution Data in Self-Supervised Long-Tail Learning.
 
-**ICLR 2023:** This repository is the official implementation of [COLT](https://openreview.net/forum?id=v8JIQdiN9Sh).
+**ICLR 2023:** This repository is the official implementation of [COLT](https://arxiv.org/abs/2306.04934v2).
 
 ## Introduction
 Though Self-supervised learning (SSL) has been widely studied as a promising technique for representation learning, it doesn’t generalize well on long-tailed datasets due to the majority classes dominating the feature space. Recent work shows that the long-tailed learning performance could be boosted by sampling extra in-domain (ID) data for self-supervised training, however, large-scale ID data which can rebalance the minority classes are expensive to collect. 
